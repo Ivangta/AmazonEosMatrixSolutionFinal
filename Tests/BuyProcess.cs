@@ -43,15 +43,18 @@ namespace AmazonHarryPotter.Tests
             IWebElement titleOfBook = Driver.FindElement(By.XPath("//span[normalize-space(text())='Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production']"));
             Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", titleOfBook.Text);
 
+            //Need to fix locator
             IWebElement editionOfBookFirst = Driver.FindElement(By.XPath("//*[@id=\"search\"]/div[1]/div[1]/div/span[1]/div[1]/div[2]/div/div/div/div/div/div[2]/div/div/div[3]/div[1]/div/div[1]/div[1]/a"));
             var editionFirst = editionOfBookFirst.Text;
             Assert.AreEqual("Paperback", editionOfBookFirst.Text);
 
+            //Need to fix locator
             IWebElement price = Driver.FindElement(By.XPath("//*[@id=\"search\"]/div[1]/div[1]/div/span[1]/div[1]/div[2]/div/div/div/div/div/div[2]/div/div/div[3]/div[1]/div/div[1]/div[2]/a/span"));
             var priceFirstFormatted = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(price.Text);
             Assert.IsNotEmpty(priceFirstFormatted);
             priceFirstFormatted.Contains("£");
 
+            //this is the problem with cookies in Amazon Site
             titleOfBook.Click();
 
             IWebElement newPrice = Driver.FindElement(By.XPath("//span[@class='a-color-base']/descendant::span[.=' £4.00 ']"));
@@ -75,6 +78,7 @@ namespace AmazonHarryPotter.Tests
             var basketPriceFormatted = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(basketPrice.Text);
             Assert.AreEqual(priceSecond, basketPriceFormatted);
 
+            //this part only appears at times
             //var giftCheck = Driver.FindElement(By.XPath("//input[@type='checkbox']"));
             //Assert.IsTrue(giftCheck.Selected);
 
@@ -101,66 +105,10 @@ namespace AmazonHarryPotter.Tests
             Assert.AreEqual("1", subtotalShoppingBasketFormatted);
         }
 
-        //public static string RemoveWhiteSpacesAddDecimalPointUsingRegex(string source)
-        //{
-        //    var newSourceFormat = source.Insert(source.Length - 2, ".");
-        //    var finalSourceFormat = Regex.Replace(newSourceFormat, @"\s", string.Empty);
-        //    return finalSourceFormat;
-        //}
-
-        //public static string RemoveNonNumericValuesUsingRegex(string source)
-        //{
-        //    return Regex.Replace(source, "[^\\d.]", string.Empty);
-        //}
-
         [TearDown]
         public void TearDown()
         {
             Driver.Quit();
         }
-        //i[@class='a-icon a-icon-checkbox']
-
-        //input[@type='checkbox']/ancestor::i[@class='a-icon a-icon-checkbox']
-        //i[@class='a-icon a-icon-checkbox']/ancestor::input[@type='checkbox']
-
-        //span[@class='a-price sw-subtotal-amount']
-        //span[@class='a-price sw-subtotal-amount']/descendant::span[@class='a-offscreen']
-
-        //div[@data-index='2']
-        //span[@class='a-size-medium a-color-base a-text-normal']
-        //span[normalize-space(text())='Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production']
-        //*[normalize-space(text())='Paperback']/ancestor::a[contains(@class, 'a-button-text')]
-        //a[(@class, 'a-button-text')]/ancestor::*[normalize-space(text())='Paperback']
-        //a[(@class='a-button-text')]/descendant::*[normalize-space(text())='Paperback']
-        //span[contains(@class, 'a-color-base')]/descendat::*[normalize-space(text())=' £4.00 ']
-        //span[contains(@class, 'a-color-base')]/descendat::span[.=' £4.00 ']
-        //span[@class='a-color-base']/descendant::span[.=' £4.00 ']
-        //span[@class='a-color-base']
-
-        //span[@class='a-price']/descendat::span[.='£4.00']
-
-
-
-        //div[@class='a-section a-spacing-none a-spacing-top-micro puis-price-instructions-style']
-
-        //a[@class=a-row a-size-base a-color-base']/descendant::*[normalize-space(text())='Paperback']
-
-        //a[@href="/Harry-Potter-Cursed-Child-Playscript/dp/0751565369/ref=sr_1_1?crid=1Z52EFRTH90TA&keywords=Harry+Potter+and+the+Cursed+Child+1+%26+2&qid=1685823506&s=books&sprefix=harry+potter+and+the+cursed+child+1+%26+2%2Cstripbooks%2C428&sr=1-1" and .='Paperback']
-
-
-
-
-
-        //div[@class='a-row a-size-base a-color-base']/ancestor::div[@class='a-section a-spacing-none a-spacing-top-micro puis-price-instructions-style']
-        //div[@class='a-section a-spacing-none a-spacing-top-micro puis-price-instructions-style']/descendant::div[@class='a-row a-size-base a-color-base']
-
-
-
-
-
-        //a[@class='a-size-base a-link-normal s-no-hover s-underline-text s-underline-link-text s-link-style a-text-normal' and @href="/Harry-Potter-Cursed-Child-Playscript/dp/0751565369/ref=sr_1_1?crid=1Z52EFRTH90TA&keywords=Harry+Potter+and+the+Cursed+Child+1+%26+2&qid=1685823506&s=books&sprefix=harry+potter+and+the+cursed+child+1+%26+2%2Cstripbooks%2C428&sr=1-1"]
-        //span[@class='a-price' and @data-a-size='xl' and @data-a-color='base']
-        //a[@class='a-size-base a-link-normal s-no-hover s-underline-text s-underline-link-text s-link-style a-text-normal' and @href="/Harry-Potter-Cursed-Child-Playscript/dp/0751565369/ref=sr_1_1?crid=1Z52EFRTH90TA&keywords=Harry+Potter+and+the+Cursed+Child+1+%26+2&qid=1685823506&s=books&sprefix=harry+potter+and+the+cursed+child+1+%26+2%2Cstripbooks%2C428&sr=1-1"]/descendant::span[@class='a-price' and @data-a-size='xl' and @data-a-color='base']
-        //a[@class='a-size-base a-link-normal s-no-hover s-underline-text s-underline-link-text s-link-style a-text-normal' and @href="/Harry-Potter-Cursed-Child-Playscript/dp/0751565369/ref=sr_1_1?crid=1Z52EFRTH90TA&keywords=Harry+Potter+and+the+Cursed+Child+1+%26+2&qid=1685823506&s=books&sprefix=harry+potter+and+the+cursed+child+1+%26+2%2Cstripbooks%2C428&sr=1-1"]/descendant::span[@class='a-offscreen' and .='£4.00']
     }
 }
