@@ -28,6 +28,7 @@ namespace AmazonHarryPotter.Tests
         [Test]
         public void LoginWithValidData()
         {
+            //UA2
             IWebElement searchBooksField = Driver.FindElement(By.Id("twotabsearchtextbox"));
             searchBooksField.SendKeys("Harry Potter and the Cursed Child 1 & 2");
 
@@ -57,6 +58,7 @@ namespace AmazonHarryPotter.Tests
             //this is the problem with cookies in Amazon Site
             titleOfBook.Click();
 
+            //UA3   
             IWebElement newPrice = Driver.FindElement(By.XPath("//span[@class='a-color-base']/descendant::span[.=' £4.00 ']"));
             var priceSecond = newPrice.Text;
             Assert.AreEqual(priceFirstFormatted, priceSecond);
@@ -74,6 +76,7 @@ namespace AmazonHarryPotter.Tests
             IWebElement addToBasketButton = Driver.FindElement(By.Id("add-to-cart-button"));
             addToBasketButton.Click();
 
+            //UA4
             var basketPrice = Driver.FindElement(By.XPath("//span[@class='a-price sw-subtotal-amount']"));
             var basketPriceFormatted = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(basketPrice.Text);
             Assert.AreEqual(priceSecond, basketPriceFormatted);
@@ -85,6 +88,7 @@ namespace AmazonHarryPotter.Tests
             var goToBasketButton = Driver.FindElement(By.XPath("//a[@data-csa-c-content-id='sw-gtc_CONTENT']"));
             goToBasketButton.Click();
 
+            //UA5
             var unitOfBooksInShoppingBasket = Driver.FindElement(By.XPath("//span[@class='a-dropdown-prompt']"));
             var unitBooksShoppingBasket = unitOfBooksInShoppingBasket.Text;
             Assert.AreEqual("1", unitBooksShoppingBasket);
