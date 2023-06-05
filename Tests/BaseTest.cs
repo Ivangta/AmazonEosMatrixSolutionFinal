@@ -15,12 +15,10 @@ namespace AmazonHarryPotter.Tests
         protected IWebDriver Driver { get; set; }
 
         protected WebDriverWait Wait;
-        protected Actions Builder { get; set; }
 
         public void Initialize()
         {
             Driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            Builder = new Actions(Driver);
             Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(2));
         }
     }
