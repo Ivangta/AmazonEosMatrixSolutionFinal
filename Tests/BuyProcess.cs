@@ -26,25 +26,51 @@ namespace AmazonHarryPotter.Tests
         }
 
         [Test]
-        public void LoginWithValidData()
+        public void AmazonBuyProcess()
         {
-            //UA2
-            IWebElement searchBooksField = Driver.FindElement(By.Id("twotabsearchtextbox"));
-            searchBooksField.SendKeys("Harry Potter and the Cursed Child 1 & 2");
+            //UA1
+            var pageTitle = Driver.Title;
+            Assert.AreEqual("Amazon", pageTitle);
 
+            //UA2
+
+            // Locate the dropdown element
             IWebElement seachDropDown = Driver.FindElement(By.Id("searchDropdownBox"));
             seachDropDown.Click();
 
-            IWebElement booksElementFromDropDown = Driver.FindElement(By.XPath("//option[@value='search-alias=stripbooks']"));
-            booksElementFromDropDown.Click();
+            // Create a new Select element
+            SelectElement select = new SelectElement(seachDropDown);
+
+            // Select an option by visible text
+            select.SelectByText("Books");
+
+            //no need
+            //IWebElement booksElementFromDropDown = Driver.FindElement(By.XPath("//option[@value='search-alias=stripbooks']"));
+            //booksElementFromDropDown.Click();
+
+            IWebElement searchBooksField = Driver.FindElement(By.Id("twotabsearchtextbox"));
+            searchBooksField.SendKeys("Harry Potter and the Cursed Child 1 & 2");
 
             IWebElement searchButton = Driver.FindElement(By.Id("nav-search-submit-button"));
             searchButton.Click();
 
-            IWebElement titleOfBook = Driver.FindElement(By.XPath("//span[normalize-space(text())='Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production']"));
-            Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", titleOfBook.Text);
+
+            IList<IWebElement> elements = Driver.FindElements(By.XPath("//*[starts-with(@cel_widget_id, 'MAIN-SEARCH_RESULTS')]"));
+            var firstSearchResult = elements.First();
+
+            var titleOfBook = firstSearchResult.FindElement(By.XPath("//h2//span"));
+            Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", titleOfBook);
+
+
+
+            //IWebElement titleOfBook = Driver.FindElement(By.XPath("//span[normalize-space(text())='Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production']"));
+            //Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", titleOfBook.Text);
 
             //Need to fix locator
+            //childElement = parentElement.FindElement(By.XPath(".//a[contains(text(), 'Paperback')]"));
+            //change Paperback to other text
+            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]")));
+
             IWebElement editionOfBookFirst = Driver.FindElement(By.XPath("//*[@id=\"search\"]/div[1]/div[1]/div/span[1]/div[1]/div[2]/div/div/div/div/div/div[2]/div/div/div[3]/div[1]/div/div[1]/div[1]/a"));
             var editionFirst = editionOfBookFirst.Text;
             Assert.AreEqual("Paperback", editionOfBookFirst.Text);
