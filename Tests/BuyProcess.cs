@@ -46,7 +46,6 @@ namespace AmazonHarryPotter.Tests
             IWebElement searchButton = Driver.FindElement(By.Id("nav-search-submit-button"));
             searchButton.Click();
 
-
             IList<IWebElement> elements = Driver.FindElements(By.XPath("//*[starts-with(@cel_widget_id, 'MAIN-SEARCH_RESULTS')]"));
             var firstSearchResult = elements.First();
 
