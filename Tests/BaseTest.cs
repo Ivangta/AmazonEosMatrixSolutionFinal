@@ -19,6 +19,7 @@ namespace AmazonHarryPotter.Tests
         public void Initialize()
         {
             Driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            Driver.Manage().Window.Maximize();
             Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(2));
         }
     }

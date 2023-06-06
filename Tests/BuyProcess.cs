@@ -58,9 +58,11 @@ namespace AmazonHarryPotter.Tests
 
             IList<IWebElement> elements = Driver.FindElements(By.XPath("//*[starts-with(@cel_widget_id, 'MAIN-SEARCH_RESULTS')]"));
             var firstSearchResult = elements.First();
+            var text = firstSearchResult.Text;
 
-            var titleOfBook = firstSearchResult.FindElement(By.XPath("//h2//span"));
-            Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", titleOfBook.Text);
+            var titleOfBookElement = firstSearchResult.FindElement(By.XPath("//h2//span"));
+            var titleOfBookText = titleOfBookElement.Text;
+            Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", titleOfBookText);
 
 
 
@@ -76,8 +78,9 @@ namespace AmazonHarryPotter.Tests
             //var editionFirst = editionOfBookFirst.Text;
             //Assert.AreEqual("Paperback", editionOfBookFirst.Text);
 
-            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']//span[@class='a-offscreen']")));
-            var paperBookPrice = firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']//span[@class='a-offscreen']")).Text;
+            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']")));
+            var paperBookPrice = firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']")).Text;
+            var paperBookPriceFormatted = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(paperBookPrice);
 
             //Need to fix locator
             //IWebElement price = Driver.FindElement(By.XPath("//*[@id=\"search\"]/div[1]/div[1]/div/span[1]/div[1]/div[2]/div/div/div/div/div/div[2]/div/div/div[3]/div[1]/div/div[1]/div[2]/a/span"));
@@ -86,22 +89,26 @@ namespace AmazonHarryPotter.Tests
             //priceFirstFormatted.Contains("£");
 
             //this is the problem with cookies in Amazon Site
-            titleOfBook.Click();
+            titleOfBookElement.Click();
 
             //UA3   
+            IWebElement emailText2 = Wait.Until(ExpectedConditions.ElementExists(By.Id("productTitle")));
+            var ddd = emailText2.Text;
             IWebElement titleOnProductDetailsPage = Driver.FindElement(By.Id("productTitle"));
-            Wait.Until(ExpectedConditions.StalenessOf(titleOnProductDetailsPage));
-            Assert.AreEqual(titleOnProductDetailsPage.Text, titleOfBook.Text);
+            var dddd = titleOnProductDetailsPage.Text;
+            Wait.Until(ExpectedConditions.ElementIsVisible(By.Id("productTitle")));
+            Assert.AreEqual(titleOnProductDetailsPage.Text, titleOfBookText);
 
             IWebElement newPrice = Driver.FindElement(By.XPath("//div[@id='formats']//div[@id='tmmSwatches']//span[contains(text(), 'Paperback')]//..//span[@class='a-size-base a-color-price a-color-price']"));
             var priceSecond = newPrice.Text;
-            Assert.AreEqual(paperBookPrice, priceSecond);
+            Assert.AreEqual(paperBookPriceFormatted, priceSecond);
 
             IWebElement editionOfBook = Driver.FindElement(By.XPath("//div[@id='formats']//div[@id='tmmSwatches']//span[contains(text(), 'Paperback')]"));
             var editionSecond = editionOfBook.Text;
             Assert.IsNotNull(editionOfBook);
             Assert.AreEqual("Paperback", editionSecond);
-            editionOfBook.Click();
+            Wait.Until(ExpectedConditions.ElementToBeClickable(editionOfBook)).Click();
+            //editionOfBook.Click();
 
             IWebElement giftOption = Driver.FindElement(By.Id("gift-wrap"));
             if (!giftOption.Selected)
@@ -113,20 +120,20 @@ namespace AmazonHarryPotter.Tests
             addToBasketButton.Click();
 
             //UA4
-            var basketPrice = Driver.FindElement(By.XPath("//div[@id='sw-atc-buy-box']//span[@class='a-offscreen']"));
+            var basketPrice = Driver.FindElement(By.XPath("//div[@id='sw-atc-buy-box']//span[@class='a-price sw-subtotal-amount']"));
             var basketPriceFormatted = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(basketPrice.Text);
-            Assert.AreEqual(paperBookPrice, basketPriceFormatted);
+            Assert.AreEqual(paperBookPriceFormatted, basketPriceFormatted);
 
             //this part only appears at times
-            var giftCheck = Driver.FindElement(By.XPath("//div[@id='sw-gift-option']//input[@type='checkbox']"));
-            Assert.IsTrue(giftCheck.Selected);
+            //var giftCheck = Driver.FindElement(By.XPath("//div[@id='sw-gift-option']//input[@type='checkbox']"));
+            //Assert.IsTrue(giftCheck.Selected);
 
             var goToBasketButton = Driver.FindElement(By.XPath("//a[@data-csa-c-content-id='sw-gtc_CONTENT']"));
             goToBasketButton.Click();
 
             //UA5
             var titleShoppingBasket = Driver.FindElement(By.XPath("//div[@class='sc-item-content-group']//span[@class='a-truncate-cut']")).Text;
-            Assert.AreEqual(titleOfBook.Text, titleShoppingBasket);
+            Assert.AreEqual(titleOfBookText, titleShoppingBasket);
 
             var unitOfBooksInShoppingBasket = Driver.FindElement(By.XPath("//span[@class='a-dropdown-prompt']"));
             var unitBooksShoppingBasket = unitOfBooksInShoppingBasket.Text;
