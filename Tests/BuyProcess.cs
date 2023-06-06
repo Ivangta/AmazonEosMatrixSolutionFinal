@@ -107,14 +107,17 @@ namespace AmazonHarryPotter.Tests
             var editionSecond = editionOfBook.Text;
             Assert.IsNotNull(editionOfBook);
             Assert.AreEqual("Paperback", editionSecond);
-            Wait.Until(ExpectedConditions.ElementToBeClickable(editionOfBook)).Click();
+            if (!editionOfBook.Selected)
+            {
+                Wait.Until(ExpectedConditions.ElementToBeClickable(editionOfBook)).Click();
+            }           
             //editionOfBook.Click();
 
-            IWebElement giftOption = Driver.FindElement(By.Id("gift-wrap"));
-            if (!giftOption.Selected)
-            {
-                Wait.Until(ExpectedConditions.ElementToBeClickable(giftOption)).Click();
-            }
+            //IWebElement giftOption = Driver.FindElement(By.Id("gift-wrap"));
+            //if (!giftOption.Selected)
+            //{
+            //    Wait.Until(ExpectedConditions.ElementToBeClickable(giftOption)).Click();
+            //}
 
             IWebElement addToBasketButton = Driver.FindElement(By.Id("add-to-cart-button"));
             addToBasketButton.Click();
@@ -125,8 +128,12 @@ namespace AmazonHarryPotter.Tests
             Assert.AreEqual(paperBookPriceFormatted, basketPriceFormatted);
 
             //this part only appears at times
-            //var giftCheck = Driver.FindElement(By.XPath("//div[@id='sw-gift-option']//input[@type='checkbox']"));
-            //Assert.IsTrue(giftCheck.Selected);
+            var giftCheck = Driver.FindElement(By.XPath("//div[@id='sw-gift-option']//input[@type='checkbox']"));
+            if (!giftCheck.Selected)
+            {
+                Wait.Until(ExpectedConditions.ElementToBeClickable(giftCheck)).Click();
+            }
+            Assert.IsTrue(giftCheck.Selected);
 
             var goToBasketButton = Driver.FindElement(By.XPath("//a[@data-csa-c-content-id='sw-gtc_CONTENT']"));
             goToBasketButton.Click();
