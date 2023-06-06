@@ -52,10 +52,10 @@ namespace AmazonHarryPotter.Tests
 
             var titleOfBookElement = firstSearchResult.FindElement(By.XPath("//h2//span"));
             var titleOfBookText = titleOfBookElement.Text;
-            Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", titleOfBookText, "Title of book is incorrect!");
+            Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", titleOfBookText, "Title of book is incorrect in books section!");
 
-            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]")),"Edition version is not paperback!");
-            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']")), "There is no price on the book!");
+            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]")),"Edition version is not paperback in books section!");
+            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']")), "There is no price on the book in books section!");
 
             var paperBookPriceInBookSection = firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']")).Text;
             var paperBookPriceInBookSectionFormatted = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(paperBookPriceInBookSection);
@@ -66,18 +66,18 @@ namespace AmazonHarryPotter.Tests
             //UA3   
             Wait.Until(ExpectedConditions.ElementExists(By.Id("productTitle")));
             var titleOnProductDetailsPage = Driver.FindElement(By.Id("productTitle")).Text;
-            Assert.AreEqual(titleOnProductDetailsPage, titleOfBookText, "Edition is not the same!");
+            Assert.AreEqual(titleOnProductDetailsPage, titleOfBookText, "Edition is not the same at product details page!");
 
-            var paperBookPriceSpecificBook = Driver.FindElement(By.XPath("//div[@id='formats']//div[@id='tmmSwatches']//span[contains(text(), 'Paperback')]//..//span[@class='a-size-base a-color-price a-color-price']")).Text;
-            Assert.AreEqual(paperBookPriceInBookSectionFormatted, paperBookPriceSpecificBook, "Price is not the same!");
+            var paperBookPriceProductDetailsPage = Driver.FindElement(By.XPath("//div[@id='formats']//div[@id='tmmSwatches']//span[contains(text(), 'Paperback')]//..//span[@class='a-size-base a-color-price a-color-price']")).Text;
+            Assert.AreEqual(paperBookPriceInBookSectionFormatted, paperBookPriceProductDetailsPage, "Price is not the same at product details page!");
 
-            IWebElement editionOfBook = Driver.FindElement(By.XPath("//div[@id='formats']//div[@id='tmmSwatches']//span[contains(text(), 'Paperback')]"));
-            var editionSecond = editionOfBook.Text;
-            Assert.IsNotNull(editionOfBook);
-            Assert.AreEqual("Paperback", editionSecond);
-            if (!editionOfBook.Selected)
+            IWebElement editionOfBookProductDetailsPage = Driver.FindElement(By.XPath("//div[@id='formats']//div[@id='tmmSwatches']//span[contains(text(), 'Paperback')]"));
+            var editionOfBookProductDetailsPageFormatted = editionOfBookProductDetailsPage.Text;
+            Assert.IsNotNull(editionOfBookProductDetailsPage);
+            Assert.AreEqual("Paperback", editionOfBookProductDetailsPageFormatted, "Edition version is not the same at product details page!");
+            if (!editionOfBookProductDetailsPage.Selected)
             {
-                Wait.Until(ExpectedConditions.ElementToBeClickable(editionOfBook)).Click();
+                Wait.Until(ExpectedConditions.ElementToBeClickable(editionOfBookProductDetailsPage)).Click();
             }           
 
             IWebElement addToBasketButton = Driver.FindElement(By.Id("add-to-cart-button"));
@@ -86,7 +86,7 @@ namespace AmazonHarryPotter.Tests
             //UA4
             var paperBookBasketAdditionPrice = Driver.FindElement(By.XPath("//div[@id='sw-atc-buy-box']//span[@class='a-price sw-subtotal-amount']"));
             var paperBookBasketAdditionPriceFormatted = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(paperBookBasketAdditionPrice.Text);
-            Assert.AreEqual(paperBookPriceSpecificBook, paperBookBasketAdditionPriceFormatted, "Price is not the same!");
+            Assert.AreEqual(paperBookPriceSpecificBook, paperBookBasketAdditionPriceFormatted, "Price is not the same at addition to basket!");
 
             //this part only appears at times
             var giftCheck = Driver.FindElement(By.XPath("//div[@id='sw-gift-option']//input[@type='checkbox']"));
@@ -94,10 +94,10 @@ namespace AmazonHarryPotter.Tests
             {
                 Wait.Until(ExpectedConditions.ElementToBeClickable(giftCheck)).Click();
             }
-            Assert.IsTrue(giftCheck.Selected);
+            Assert.IsTrue(giftCheck.Selected,"Gift option is not selected in basket addition page!");
 
-            var goToBasketButton = Driver.FindElement(By.XPath("//a[@data-csa-c-content-id='sw-gtc_CONTENT']"));
-            goToBasketButton.Click();
+            var basketCheckoutButton = Driver.FindElement(By.XPath("//a[@data-csa-c-content-id='sw-gtc_CONTENT']"));
+            basketCheckoutButton.Click();
 
             //UA5
             var titleShoppingBasket = Driver.FindElement(By.XPath("//div[@class='sc-item-content-group']//span[@class='a-truncate-cut']")).Text;
@@ -111,9 +111,8 @@ namespace AmazonHarryPotter.Tests
             var editionThird = editionInShoppingBasket.Text;
             Assert.AreEqual(editionSecond, editionThird);
 
-            var priceInShoppingBasket = Driver.FindElement(By.XPath("//span[@id='sc-subtotal-amount-buybox']//span"));
-            var priceShoppingBasket = priceInShoppingBasket.Text;
-            Assert.AreEqual(basketPriceFormatted, priceShoppingBasket);
+            var PaperBookPriceInShoppingBasket = Driver.FindElement(By.XPath("//span[@id='sc-subtotal-amount-buybox']//span")).Text;
+            Assert.AreEqual(paperBookBasketAdditionPriceFormatted, PaperBookPriceInShoppingBasket, "Price is not the same in shopping basket!");
 
             //Two asserts, if needed
             var subtotalCheckoutBasket = Driver.FindElement(By.Id("sc-subtotal-label-buybox"));
