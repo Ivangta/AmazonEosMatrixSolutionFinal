@@ -20,9 +20,11 @@ namespace AmazonHarryPotter.Tests
         public void Setup()
         {
             Initialize();
+            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(2));
             Driver.Navigate().GoToUrl("https://www.amazon.co.uk/");
             Driver.FindElement(By.Id("sp-cc-accept")).Click();
             _helper = new Helpers();
+            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(2));
         }
 
         [Test]
@@ -53,13 +55,12 @@ namespace AmazonHarryPotter.Tests
             var editionOfBookInBookSectionText = editionOfBookInBookSectionElement.Text;
             Assert.AreEqual("Harry Potter and the Cursed Child - Parts One and Two: The Official Playscript of the Original West End Production", editionOfBookInBookSectionText, "Title of book is incorrect in books section!");
 
-            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]")),"Edition version is not paperback in books section!");
-            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']")), "There is no price on the book in books section!");
-
             var paperBookPriceInBookSectionElement = firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]/..//..//span[@class='a-price']")).Text;
             var paperBookPriceInBookSectionText = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(paperBookPriceInBookSectionElement);
 
-            //this is the problem with cookies in Amazon Site
+            Assert.IsNotNull(firstSearchResult.FindElement(By.XPath("//a[contains(text(), 'Paperback')]")),"Edition version is not paperback in books section!");
+            Assert.IsNotNull(paperBookPriceInBookSectionElement, "There is no price on the book in books section!");
+
             editionOfBookInBookSectionElement.Click();
 
             //UA3   
@@ -87,7 +88,6 @@ namespace AmazonHarryPotter.Tests
             var paperBookBasketAdditionPriceText = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(paperBookBasketAdditionPriceElement.Text);
             Assert.AreEqual(paperBookPriceProductDetailsPage, paperBookBasketAdditionPriceText, "Price is not the same at addition to basket!");
 
-            //this part only appears at times
             var giftCheck = Driver.FindElement(By.XPath("//div[@id='sw-gift-option']//input[@type='checkbox']"));
             if (!giftCheck.Selected)
             {
@@ -111,7 +111,6 @@ namespace AmazonHarryPotter.Tests
             var PaperBookPriceInShoppingBasket = Driver.FindElement(By.XPath("//span[@id='sc-subtotal-amount-buybox']//span")).Text;
             Assert.AreEqual(paperBookBasketAdditionPriceText, PaperBookPriceInShoppingBasket, "Price is not the same at shopping basket page!");
 
-            //Two asserts, if needed
             var subtotalCheckoutBasket = Driver.FindElement(By.Id("sc-subtotal-label-buybox"));
             var subtotalCheckoutBasketFormatted = _helper.RemoveNonNumericValuesUsingRegex(subtotalCheckoutBasket.Text);
             var subtotalShoppingBasket = Driver.FindElement(By.Id("sc-subtotal-label-activecart"));
