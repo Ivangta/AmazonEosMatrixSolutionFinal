@@ -86,7 +86,7 @@ namespace AmazonHarryPotter.Tests
             //UA4
             var paperBookBasketAdditionPriceElement = Driver.FindElement(By.XPath("//div[@id='sw-atc-buy-box']//span[@class='a-price sw-subtotal-amount']"));
             var paperBookBasketAdditionPriceText = _helper.RemoveWhiteSpacesAddDecimalPointUsingRegex(paperBookBasketAdditionPriceElement.Text);
-            Assert.AreEqual(paperBookPriceProductDetailsPage, paperBookBasketAdditionPriceText, "Price is not the same at addition to basket!");
+            Assert.AreEqual(paperBookPriceProductDetailsPage, paperBookBasketAdditionPriceText, "Price is not the same in basket addition page!");
 
             var giftCheck = Driver.FindElement(By.XPath("//div[@id='sw-gift-option']//input[@type='checkbox']"));
             if (!giftCheck.Selected)
