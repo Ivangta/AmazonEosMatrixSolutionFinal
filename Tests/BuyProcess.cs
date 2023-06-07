@@ -20,7 +20,6 @@ namespace AmazonHarryPotter.Tests
         public void Setup()
         {
             Initialize();
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(2));
             Driver.Navigate().GoToUrl("https://www.amazon.co.uk/");
             Driver.FindElement(By.Id("sp-cc-accept")).Click();
             _helper = new Helpers();
@@ -75,10 +74,7 @@ namespace AmazonHarryPotter.Tests
             var editionVersionProductDetailsPageText = editionVersionProductDetailsPageElement.Text;
             Assert.IsNotNull(editionVersionProductDetailsPageElement);
             Assert.AreEqual("Paperback", editionVersionProductDetailsPageText, "Edition version is not the same at product details page!");
-            if (!editionVersionProductDetailsPageElement.Selected)
-            {
-                Wait.Until(ExpectedConditions.ElementToBeClickable(editionVersionProductDetailsPageElement)).Click();
-            }           
+            Wait.Until(ExpectedConditions.ElementToBeClickable(editionVersionProductDetailsPageElement)).Click();        
 
             IWebElement addToBasketButton = Driver.FindElement(By.Id("add-to-cart-button"));
             addToBasketButton.Click();
